@@ -1,16 +1,16 @@
 -module(squad).
 
 -export([ new/3
-	    , new/4
-	    , subject/1
-	    , subject/2
-	    , predicate/1
-	    , predicate/2
-	    , object/1
-	    , object/2
-	    , label/1
-	    , label/2
-	    ]).
+	      , new/4
+	      , subject/1
+	      , subject/2
+	      , predicate/1
+	      , predicate/2
+	      , object/1
+	      , object/2
+	      , label/1
+	      , label/2
+        ]).
 
 -type squad3() ::   
   #{
@@ -29,7 +29,7 @@
 
 -type squad() :: squad3() | squad4().
 
--export_type([squad/0]).
+-export_type([squad/0, squad3/0, squad4/0]).
 
 -spec new(iodata(), iodata(), iodata()) -> squad3().
 new(Subject, Predicate, Object) ->
@@ -62,19 +62,19 @@ object(#{object := Object}) -> Object.
 label(#{label := Label}) -> Label.
 
 %% setters
--spec subject(squad(), iodata()) -> iodata().
+-spec subject(squad(), iodata()) -> squad().
 subject(Squad, Subject) -> 
   Squad#{subject => Subject}.
 
--spec predicate(squad(), iodata()) -> iodata().
+-spec predicate(squad(), iodata()) -> squad().
 predicate(Squad, Predicate) ->
   Squad#{predicate => Predicate}.
 
--spec object(squad(), iodata()) -> iodata().
+-spec object(squad(), iodata()) -> squad().
 object(Squad, Object) -> 
   Squad#{object => Object}.
 
--spec label(squad4(), iodata()) -> iodata().
+-spec label(squad(), iodata()) -> squad4().
 label(Squad, Label) -> 
   Squad#{label => Label}.
 
