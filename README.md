@@ -1,4 +1,4 @@
-# Kylie
+# Kylie (can't get you out of my data base)
 
 Kylie is a Erlang application for Cayley graph data base
 
