@@ -21,3 +21,5 @@ Eshell V7.0  (abort with ^G)
 4> kylie:get_result(<<"Kylie">>, <<"is">>).
 [<<"model">>,<<"singer">>,<<"songwriter">>]
 ```
+![kylie](https://cloud.githubusercontent.com/assets/6124495/18232603/3f1f34fa-72a9-11e6-8b52-4a2731a4be7c.gif)
+
