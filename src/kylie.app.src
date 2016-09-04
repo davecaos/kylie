@@ -1,0 +1,14 @@
+{application, kylie,
+ [
+  {description,
+   "Kylie is a Erlang application for Cayley graph data base"},
+  {vsn, "0.0.1"},
+  {applications, [kernel, stdlib, shotgun]},
+  {modules, []},
+  {registered, []},
+  {maintainers, ["David Cesar Hernan Cao"]},
+  {licenses, ["MIT"]},
+  {links, [{"Github", "https://github.com/davecaos/kylie"}]},
+  {build_tools, ["makefile", "rebar"]}
+ ]
+}.
