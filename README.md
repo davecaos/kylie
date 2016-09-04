@@ -9,8 +9,8 @@ Example:
 ```erlang
 Eshell V7.0  (abort with ^G)
 1>   squad:new("Kylie", "is", "singer").
-
 #{object => "singer",predicate => "is",subject => "Kylie"}
+
 2> kylie:add( squad:new(<<"Kylie">>, <<"is">>,<< "singer">>)).
 {ok,{200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}}
 2>  kylie:add( squad:new(<<"Kylie">>, <<"is">>,<< "songwriter">>)).
