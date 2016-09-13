@@ -1,5 +1,9 @@
 -module(squad).
 
+-author("David Cesar Hernan Cao <david.c.h.cao@gmail.com>").
+-github("https://github.com/davecaos").
+-license("MIT").
+
 -export([ new/3
 	      , new/4
 	      , subject/1
@@ -10,6 +14,7 @@
 	      , object/2
 	      , label/1
 	      , label/2
+        , nquads_file/1
         ]).
 
 -type squad3() ::   
@@ -78,3 +83,22 @@ object(Squad, Object) ->
 label(Squad, Label) -> 
   Squad#{label => Label}.
 
+-spec nquads_file([squad()]) -> binary().
+nquads_file(Squads) -> 
+  list_to_binary(lists:map(fun relp_quads/1, Squads)).
+
+-spec relp_quads(squad()) -> binary().
+relp_quads(Squad) ->
+  Subject = maps:get(subject, Squad, <<"null">>),
+  Predicate = maps:get(predicate, Squad,<<"null">>),
+  Object = maps:get(object, Squad, <<"null">>),
+  Label = maps:get(label, Squad, <<"null">>),
+  << Subject/binary
+   , <<" ">>/binary
+   , Predicate/binary
+   , <<" ">>/binary
+   , Object/binary
+   , <<" ">>/binary
+   , Label/binary
+   , <<".\n">>/binary
+  >>.

@@ -10,3 +10,6 @@ rel/example_project
 .rebar
 *.lock
 _build/
+logs
+kylie.d
+.erlang.mk/*

@@ -8,7 +8,7 @@ Kylie is a Erlang application for Cayley graph data base
 Example:
 ```erlang
 Eshell V7.0  (abort with ^G)
-1>   squad:new("Kylie", "is", "singer").
+1> squad:new("Kylie", "is", "singer").
 #{object => "singer",predicate => "is",subject => "Kylie"}
 
 2> kylie:add( squad:new(<<"Kylie">>, <<"is">>,<< "singer">>)).
