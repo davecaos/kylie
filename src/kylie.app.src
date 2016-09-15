@@ -3,7 +3,7 @@
   {description,
    "Kylie is a Erlang application for Cayley graph data base"},
   {vsn, "0.0.1"},
-  {applications, [kernel, stdlib, shotgun]},
+  {applications, [kernel, stdlib, hackney]},
   {modules, []},
   {registered, []},
   {maintainers, ["David Cesar Hernan Cao"]},

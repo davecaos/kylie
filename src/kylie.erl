@@ -4,39 +4,38 @@
 -github("https://github.com/davecaos").
 -license("MIT").
 
--export([ start/0
-	      , stop/0
-	      , add/1
-	      , delete/1
-	      , query/1
+-export([ add/1
+        , start/0
+        , stop/0
+        , delete/1
+        , query/1
         , get_result/2
         , build_gremblin/1
-	      ]).
+        , build_gremblin_human_readable/1
+        ]).
 
 -define(WRITE_URI,          "/api/v1/write").
 -define(WRITE_NQUAD_URI,    "/api/v1/write/file/nquad").
 -define(DELETE_URI,         "/api/v1/delete").
 -define(QUERY_GREMBLIN_URI, "/api/v1/query/gremlin").
 
-start() ->
- ok.
+start() -> ok.
 
-stop() ->
-  ok.
+stop() ->  ok.
 
 add(Squad) ->
   JsonBody = jsx:encode([Squad]),
-  cayley_http_call(?WRITE_URI, JsonBody).
+  {200, _Response} = cayley_http_call(?WRITE_URI, JsonBody).
 
 delete(Squad) ->
   JsonBody = jsx:encode([Squad]),
-  cayley_http_call(?DELETE_URI, JsonBody).
+  {200, _Response} = cayley_http_call(?DELETE_URI, JsonBody).
 
 get_result(Subject, Predicate) ->
   Query = io_lib:format(<<"g.V('~s').Out('~s').All()">>, [Subject, Predicate]),
   query(Query).
 
-filter_query_result(#{<<"result">> := null}) -> [];
+filter_query_result(#{<<"result">> := null})    -> [];
 filter_query_result(#{<<"result">> := Results}) ->
   Fun = 
     fun(#{<<"id">> := Contact}) -> 
@@ -44,8 +43,11 @@ filter_query_result(#{<<"result">> := Results}) ->
     end,
   lists:map(Fun, Results).
 
+build_gremblin_human_readable(PropLisps) ->
+ erlang:iolist_to_binary(build_gremblin(PropLisps)).
+
 build_gremblin(PropLisps) ->
- lists:map( fun build_query/1, PropLisps).
+ lists:map(fun build_query/1, PropLisps).
 
 build_query({in, In}) ->
   io_lib:format(<<"In('~s').">>, [build_query(In)]);
@@ -81,29 +83,27 @@ build_query(all) ->
 build_query(Node) ->
   Node.
 
-
 query(Query) ->
-  cayley_http_call(?QUERY_GREMBLIN_URI, Query).
+  get_cayley_error(cayley_http_call(?QUERY_GREMBLIN_URI, Query)).
 
 -spec cayley_http_call(string(), iodata()) -> map().
 cayley_http_call(Uri, Body) ->
   {ok, Port} = application:get_env(kylie, port),
-  {ok, Url}  = application:get_env(kylie, host),
+  {ok, Host}  = application:get_env(kylie, host),
   {ok, Timeout} = application:get_env(kylie, timeout),
   Headers = [{<<"Content-Type">>, <<"application/json">>}],
-  Opts = #{timeout => Timeout},
-  try 
-    {ok, Pid} = shotgun:open(Url, Port),
-    Response  = shotgun:request(Pid, post, Uri, Headers, Body, Opts),
-    shotgun:close(Pid),
-    get_cayley_error(Response)
-   catch
-    _:Exception -> {error, Exception}
-  end.
+  List    = [Host, <<":">>, integer_to_list(Port), Uri],
+  URL     = iolist_to_binary(List),
+  Payload = Body,
+  Options = [{timeout, Timeout}],
+  {ok, StatusCode, _RespHeaders, ClientRef} =
+    hackney:request(post, URL, Headers, Payload, Options),
+  {ok, ResponseBody} = hackney:body(ClientRef),
+  {StatusCode, ResponseBody}.
 
-
-get_cayley_error({Result, #{body := JsonBody, status_code := 200}}) ->
-  {Result, filter_query_result(jsx:decode(JsonBody, [return_maps]))};
-get_cayley_error({Result, #{body := Description, status_code := Code}}) ->
-  {Result, {Code, Description}}.
+get_cayley_error({_StatusCode = 200, JsonResponse}) ->
+  MapResponse = jsx:decode(JsonResponse, [return_maps]),
+  {ok, filter_query_result(MapResponse)};
+get_cayley_error({StatusErrorCode, ErrorDescription}) ->
+  {error, {StatusErrorCode, ErrorDescription}}.
 

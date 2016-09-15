@@ -86,7 +86,6 @@ delete(_Config) ->
 
   kylie:delete(KylieMinogue),
   {ok, Result2}  = kylie:get_result(<<"Kylie">>, <<"recorded">>),
-  ct:pal("Result ~p",[Result2]),
   [<<"Enjoy Yourself">>
   ,<<"Fever">>
   ,<<"Kylie">>
