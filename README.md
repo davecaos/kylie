@@ -28,7 +28,7 @@ Eshell V7.0  (abort with ^G)
 5> kylie:add(squad:new(<<"Fever">>, <<"recorded">>, <<"In Your Eyes">>)),
 {200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
 
-%% The idea is build this query -> <<"g.V('Kylie').Out('recorded')..Out('incluided')All()">>
+%% The idea is build this query -> <<"g.V('Kylie').Out('recorded').Out('incluided').All()">>
 PropLispQuery = [{graph_vertex, <<"Kylie">>}, {out, <<"recorded">>}, {out, <<"incluided">>}, all].
 [{graph_vertex,<<"Kylie">>},{out,<<"recorded">>},{out,<<"incluided">>},all]
 GremblinQuery = kylie:build_gremblin_human_readable(PropLispQuery).
