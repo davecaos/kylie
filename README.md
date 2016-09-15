@@ -1,4 +1,6 @@
 # Kylie (can't get you out of my data base)
+[![Hex.pm](https://img.shields.io/hexpm/v/kylie.svg?style=flat-square)](https://hex.pm/packages/kylie)
+[![Hex.pm](https://img.shields.io/hexpm/dt/kylie.svg?style=flat-square)](https://hex.pm/packages/kylie)
 
 Kylie is a blond and small Erlang client for Cayley graph data base
 
