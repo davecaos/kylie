@@ -1,4 +1,4 @@
-# Kylie (can't get you out of my data base)
+# Kylie (can't get you out of my graph data base)
 [![Hex.pm](https://img.shields.io/hexpm/v/kylie.svg?style=flat-square)](https://hex.pm/packages/kylie)
 [![Hex.pm](https://img.shields.io/hexpm/dt/kylie.svg?style=flat-square)](https://hex.pm/packages/kylie)
 
