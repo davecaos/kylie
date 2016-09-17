@@ -21,22 +21,29 @@ Eshell V7.0  (abort with ^G)
 3> kylie:add(squad:new(<<"Kylie">>, <<"is">>,<< "model">>)).
 {200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
 
+```
+```erlang
+%% You can do a generic query with Subject and Predicate.
 4> kylie:get_result(<<"Kylie">>, <<"is">>).
 {ok, [<<"model">>,<<"singer">>,<<"songwriter">>]}
+```
+
+```erlang
+%% You can also do a proplisp(?) and generate a query in the [Gremblin](http://gremlindocs.spmallette.documentup.com/) way
+%% The idea is build this query -> <<"g.V('Kylie').Out('recorded').Out('incluided').All()">>
 
 5> kylie:add(squad:new(<<"Kylie">>, <<"recorded">>, <<"Fever">>)).
 {200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
-5> kylie:add(squad:new(<<"Fever">>, <<"incluided">>, <<"Can't Get You Out of My Head">>)).
+6> kylie:add(squad:new(<<"Fever">>, <<"incluided">>, <<"Can't Get You Out of My Head">>)).
 {200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
-5> kylie:add(squad:new(<<"Fever">>, <<"incluided">>, <<"In Your Eyes">>)),
+7> kylie:add(squad:new(<<"Fever">>, <<"incluided">>, <<"In Your Eyes">>)),
 {200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
 
-%% The idea is build this query -> <<"g.V('Kylie').Out('recorded').Out('incluided').All()">>
-PropLispQuery = [{graph_vertex, <<"Kylie">>}, {out, <<"recorded">>}, {out, <<"incluided">>}, all].
+8>PropLispQuery = [{graph_vertex, <<"Kylie">>}, {out, <<"recorded">>}, {out, <<"incluided">>}, all].
 [{graph_vertex,<<"Kylie">>},{out,<<"recorded">>},{out,<<"incluided">>},all]
-GremblinQuery = kylie:build_gremblin_human_readable(PropLispQuery).
+9>GremblinQuery = kylie:build_gremblin_human_readable(PropLispQuery).
 <<"g.V('Kylie').Out('recorded').Out('incluided').All()">>
-{ok, Result} = kylie:query(GremblinQuery).
+10>{ok, Result} = kylie:query(GremblinQuery).
 {ok,[<<"Can't Get You Out of My Head">>,<<"In Your Eyes">>]}
 
 ```
