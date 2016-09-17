@@ -22,16 +22,17 @@ Eshell V7.0  (abort with ^G)
 {200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
 
 ```
+
+You can do a generic query with Subject and Predicate.
 ```erlang
-%% You can do a generic query with Subject and Predicate.
 4> kylie:get_result(<<"Kylie">>, <<"is">>).
 {ok, [<<"model">>,<<"singer">>,<<"songwriter">>]}
 ```
 
-```erlang
-%% You can also do a proplisp(?) and generate a query in the [Gremblin](http://gremlindocs.spmallette.documentup.com/) way
-%% The idea is build this query -> <<"g.V('Kylie').Out('recorded').Out('incluided').All()">>
 
+You can also do a proplisp(?) and generate a query in the [Gremblin](http://gremlindocs.spmallette.documentup.com/) way
+The idea is build this query: <<"g.V('Kylie').Out('recorded').Out('incluided').All()">>
+```erlang
 5> kylie:add(squad:new(<<"Kylie">>, <<"recorded">>, <<"Fever">>)).
 {200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
 6> kylie:add(squad:new(<<"Fever">>, <<"incluided">>, <<"Can't Get You Out of My Head">>)).
