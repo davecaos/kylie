@@ -30,8 +30,13 @@ You can do a generic query with Subject and Predicate.
 ```
 
 
-You can also do a proplisp(?) and generate a query in the [Gremblin](http://gremlindocs.spmallette.documentup.com/) way
-The idea is build this query: <<"g.V('Kylie').Out('recorded').Out('incluided').All()">>
+You can also do a proplisp(?) and generate a query in the [Gremblin](http://gremlindocs.spmallette.documentup.com/) way.
+
+The idea is build this query: 
+```javascript
+g.V('Kylie').Out('recorded').Out('incluided').All()"
+```
+
 ```erlang
 5> kylie:add(squad:new(<<"Kylie">>, <<"recorded">>, <<"Fever">>)).
 {200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
