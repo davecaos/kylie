@@ -34,7 +34,11 @@ You can also do a proplisp(?) and generate a query in the [Gremblin](http://grem
 
 The idea is build this query: 
 ```javascript
-g.V('Kylie').Out('recorded').Out('incluided').All()"
+  g.V('Kylie').Out('recorded').Out('incluided').All()"
+```
+With this proplisp:
+```erlang
+   [{graph_vertex, <<"Kylie">>}, {out, <<"recorded">>}, {out, <<"incluided">>}, all]
 ```
 
 ```erlang
