@@ -1,6 +1,6 @@
 PROJECT = kylie
 
-DEPS = hackney jsx 
+DEPS = hackney jsx
 CONFIG = rel/sys.config
 
 # Dependencies which need to be overriden to a specific version

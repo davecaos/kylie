@@ -9,6 +9,6 @@
   {maintainers, ["David Cesar Hernan Cao"]},
   {licenses, ["MIT"]},
   {links, [{"Github", "https://github.com/davecaos/kylie"}]},
-  {build_tools, ["makefile", "rebar"]}
+  {build_tools, ["make", "rebar3", "mix"]}
  ]
 }.
