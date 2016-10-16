@@ -19,18 +19,23 @@
 -define(DELETE_URI,         "/api/v1/delete").
 -define(QUERY_GREMBLIN_URI, "/api/v1/query/gremlin").
 
+-spec start() -> ok.
 start() -> ok.
 
+-spec stop() -> ok.
 stop() ->  ok.
 
+-spec add(squad:squad4()) -> tuple().
 add(Squad) ->
   JsonBody = jsx:encode([Squad]),
   {200, _Response} = cayley_http_call(?WRITE_URI, JsonBody).
 
+-spec delete(squad:squad4()) -> tuple().
 delete(Squad) ->
   JsonBody = jsx:encode([Squad]),
   {200, _Response} = cayley_http_call(?DELETE_URI, JsonBody).
 
+-spec get_result(binary(), binary()) -> {ok | error, list()}.
 get_result(Subject, Predicate) ->
   Query = io_lib:format(<<"g.V('~s').Out('~s').All()">>, [Subject, Predicate]),
   query(Query).
@@ -43,9 +48,11 @@ filter_query_result(#{<<"result">> := Results}) ->
     end,
   lists:map(Fun, Results).
 
+-spec build_gremblin_human_readable(list()) -> binary().
 build_gremblin_human_readable(PropLisps) ->
  erlang:iolist_to_binary(build_gremblin(PropLisps)).
 
+-spec build_gremblin(list()) -> binary().
 build_gremblin(PropLisps) ->
  lists:map(fun build_query/1, PropLisps).
 
@@ -83,14 +90,15 @@ build_query(all) ->
 build_query(Node) ->
   Node.
 
+-spec query(binary()) -> {ok | error, list()}.
 query(Query) ->
   get_cayley_error(cayley_http_call(?QUERY_GREMBLIN_URI, Query)).
 
 -spec cayley_http_call(string(), iodata()) -> map().
 cayley_http_call(Uri, Body) ->
-  {ok, Port} = application:get_env(kylie, port),
-  {ok, Host}  = application:get_env(kylie, host),
-  {ok, Timeout} = application:get_env(kylie, timeout),
+  {ok, Port} = application:get_env(kylie, port, {ok, 64210}),
+  {ok, Host}  = application:get_env(kylie, host, {ok, "127.0.0.1"}),
+  {ok, Timeout} = application:get_env(kylie, timeout, {ok, 3000}),
   Headers = [{<<"Content-Type">>, <<"application/json">>}],
   List    = [Host, <<":">>, integer_to_list(Port), Uri],
   URL     = iolist_to_binary(List),
