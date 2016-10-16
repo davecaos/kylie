@@ -96,9 +96,9 @@ query(Query) ->
 
 -spec cayley_http_call(string(), iodata()) -> map().
 cayley_http_call(Uri, Body) ->
-  {ok, Port} = application:get_env(kylie, port),
-  {ok, Host}  = application:get_env(kylie, host),
-  {ok, Timeout} = application:get_env(kylie, timeout),
+  {ok, Port} = application:get_env(kylie, port, {ok, 64210}),
+  {ok, Host}  = application:get_env(kylie, host, {ok, "127.0.0.1"}),
+  {ok, Timeout} = application:get_env(kylie, timeout, {ok, 3000}),
   Headers = [{<<"Content-Type">>, <<"application/json">>}],
   List    = [Host, <<":">>, integer_to_list(Port), Uri],
   URL     = iolist_to_binary(List),
