@@ -60,7 +60,7 @@ With this proplisp:
 ```
 
 ---------
-Example:
+Elixir Example:
 ```elixir
 Interactive Elixir (1.3.0) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)> Squad.new("Kylie", "is", "singer")
