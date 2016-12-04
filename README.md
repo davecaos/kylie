@@ -3,7 +3,7 @@
 [![Hex.pm](https://img.shields.io/hexpm/dt/kylie.svg?style=flat-square)](https://hex.pm/packages/kylie)
 [![License](http://img.shields.io/hexpm/l/kylie.svg?style=flat)](https://hex.pm/packages/kylie)
 
-Kylie is a blond and small Erlang client for Cayley graph data base
+Kylie is a blond and small Erlang/Elixir client for Cayley graph data base
 
  [Cayley](https://github.com/cayleygraph/cayley/) is an open-source graph data base written in go
 
@@ -60,7 +60,7 @@ With this proplisp:
 ```
 
 ---------
-Example:
+Elixir Example:
 ```elixir
 Interactive Elixir (1.3.0) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)> Squad.new("Kylie", "is", "singer")
