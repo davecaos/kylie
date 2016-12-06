@@ -19,13 +19,15 @@
 -define(DELETE_URI,         "/api/v1/delete").
 -define(QUERY_GREMBLIN_URI, "/api/v1/query/gremlin").
 
+-type error() :: {integer(), binary()}.
+
 -spec start() -> ok.
 start() -> ok.
 
 -spec stop() -> ok.
 stop() ->  ok.
 
--spec add(squad:squad4()) -> tuple().
+-spec add(squad:squad4()) -> ok | error().
 add(Squad) ->
   JsonBody = jsx:encode([Squad]),
   case cayley_http_call(?WRITE_URI, JsonBody) of
@@ -33,7 +35,7 @@ add(Squad) ->
     {StatusErrorCode, Response} -> {StatusErrorCode, Response}
   end.
 
--spec delete(squad:squad4()) -> tuple().
+-spec delete(squad:squad4()) -> ok | error().
 delete(Squad) ->
   JsonBody = jsx:encode([Squad]),
   case cayley_http_call(?DELETE_URI, JsonBody) of
