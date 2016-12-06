@@ -17,17 +17,17 @@ Eshell V7.0  (abort with ^G)
 #{object => "singer",predicate => "is",subject => "Kylie"}
 
 2> kylie:add(squad:new(<<"Kylie">>, <<"is">>,<< "singer">>)).
-{200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
-2>  kylie:add(squad:new(<<"Kylie">>, <<"is">>,<< "songwriter">>)).
-{200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
-3> kylie:add(squad:new(<<"Kylie">>, <<"is">>,<< "model">>)).
-{200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
+ok
+3> kylie:add(squad:new(<<"Kylie">>, <<"is">>,<< "songwriter">>)).
+ok
+4> kylie:add(squad:new(<<"Kylie">>, <<"is">>,<< "model">>)).
+ok
 
 ```
 
 You can do a generic query with Subject and Predicate.
 ```erlang
-4> kylie:get_result(<<"Kylie">>, <<"is">>).
+5> kylie:get_result(<<"Kylie">>, <<"is">>).
 {ok, [<<"model">>,<<"singer">>,<<"songwriter">>]}
 ```
 
@@ -44,18 +44,18 @@ With this proplisp:
 ```
 
 ```erlang
-5> kylie:add(squad:new(<<"Kylie">>, <<"recorded">>, <<"Fever">>)).
-{200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
-6> kylie:add(squad:new(<<"Fever">>, <<"incluided">>, <<"Can't Get You Out of My Head">>)).
-{200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
-7> kylie:add(squad:new(<<"Fever">>, <<"incluided">>, <<"In Your Eyes">>)),
-{200, <<"{\"result\": \"Successfully wrote 1 quads.\"}">>}
+6> kylie:add(squad:new(<<"Kylie">>, <<"recorded">>, <<"Fever">>)).
+ok
+7> kylie:add(squad:new(<<"Fever">>, <<"incluided">>, <<"Can't Get You Out of My Head">>)).
+ok
+8> kylie:add(squad:new(<<"Fever">>, <<"incluided">>, <<"In Your Eyes">>)),
+ok
 
-8>PropLispQuery = [{graph_vertex, <<"Kylie">>}, {out, <<"recorded">>}, {out, <<"incluided">>}, all].
+9>PropLispQuery = [{graph_vertex, <<"Kylie">>}, {out, <<"recorded">>}, {out, <<"incluided">>}, all].
 [{graph_vertex,<<"Kylie">>},{out,<<"recorded">>},{out,<<"incluided">>},all]
-9>GremblinQuery = kylie:build_gremblin_human_readable(PropLispQuery).
+10>GremblinQuery = kylie:build_gremblin_human_readable(PropLispQuery).
 <<"g.V('Kylie').Out('recorded').Out('incluided').All()">>
-10>{ok, Result} = kylie:query(GremblinQuery).
+11>{ok, Result} = kylie:query(GremblinQuery).
 {ok,[<<"Can't Get You Out of My Head">>,<<"In Your Eyes">>]}
 ```
 
@@ -67,11 +67,11 @@ iex(1)> Squad.new("Kylie", "is", "singer")
 %{object: "singer", predicate: "is", subject: "Kylie"}
 
 iex(2)> Kylie.add(Squad.new("Kylie", "is", "model"))
-{200, "{\"result\": \"Successfully wrote 1 quads.\"}"}
+ok
 iex(3)> Kylie.add(Squad.new("Kylie", "is", "songwriter"))
-{200, "{\"result\": \"Successfully wrote 1 quads.\"}"}
+ok
 iex(4)> Kylie.add(Squad.new("Kylie", "is", "actress"))
-{200, "{\"result\": \"Successfully wrote 1 quads.\"}"}
+ok
 
 ```
 
@@ -95,11 +95,11 @@ With this proplisp:
 
 ```elixir
 iex(5)> Kylie.add(Squad.new("Kylie", "recorded", "Fever"))
-{200, "{\"result\": \"Successfully wrote 1 quads.\"}"}
+ok
 iex(6)> Kylie.add(Squad.new("Fever", "incluided", "Can't Get You Out of My Head"))
-{200, "{\"result\": \"Successfully wrote 1 quads.\"}"}
+ok
 iex(7)> Kylie.add(Squad.new("Fever", "incluided", "In Your Eyes"))
-{200, "{\"result\": \"Successfully wrote 1 quads.\"}"}
+ok
 
 iex(8)> propLispQuery = [{:graph_vertex, "Kylie"}, {:out, "recorded"}, {:out, "incluided"}, :all]
 [{:graph_vertex, "Kylie"}, {:out, "recorded"}, {:out, "incluided"}, :all]
