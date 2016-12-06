@@ -28,12 +28,18 @@ stop() ->  ok.
 -spec add(squad:squad4()) -> tuple().
 add(Squad) ->
   JsonBody = jsx:encode([Squad]),
-  {200, _Response} = cayley_http_call(?WRITE_URI, JsonBody).
+  case cayley_http_call(?WRITE_URI, JsonBody) of
+    {200, _Response} -> ok;
+    {StatusErrorCode, Response} -> {StatusErrorCode, Response}
+  end.
 
 -spec delete(squad:squad4()) -> tuple().
 delete(Squad) ->
   JsonBody = jsx:encode([Squad]),
-  {200, _Response} = cayley_http_call(?DELETE_URI, JsonBody).
+  case cayley_http_call(?DELETE_URI, JsonBody) of
+    {200, _Response} -> ok;
+    {StatusErrorCode, Response} -> {StatusErrorCode, Response}
+  end.
 
 -spec get_result(binary(), binary()) -> {ok | error, list()}.
 get_result(Subject, Predicate) ->
@@ -96,16 +102,17 @@ query(Query) ->
 
 -spec cayley_http_call(string(), iodata()) -> map().
 cayley_http_call(Uri, Body) ->
-  {ok, Port} = application:get_env(kylie, port, {ok, 64210}),
-  {ok, Host}  = application:get_env(kylie, host, {ok, "127.0.0.1"}),
-  {ok, Timeout} = application:get_env(kylie, timeout, {ok, 3000}),
+  DefaultPort = {ok, "64210"},
+  DefaultHost = {ok, "127.0.0.1"},
+  DefaultTimeOut = {ok, 3000},
+  {ok, Port} = application:get_env(kylie, port, DefaultPort),
+  {ok, Host}  = application:get_env(kylie, host, DefaultHost),
+  {ok, Timeout} = application:get_env(kylie, timeout, DefaultTimeOut),
   Headers = [{<<"Content-Type">>, <<"application/json">>}],
-  List    = [Host, <<":">>, integer_to_list(Port), Uri],
+  List    = [Host, <<":">>, Port, Uri],
   URL     = iolist_to_binary(List),
-  Payload = Body,
-  Options = [{timeout, Timeout}],
-  {ok, StatusCode, _RespHeaders, ClientRef} =
-    hackney:request(post, URL, Headers, Payload, Options),
+  Opts = [{timeout, Timeout}],
+  {ok, StatusCode, _, ClientRef} = hackney:request(post, URL, Headers, Body, Opts),
   {ok, ResponseBody} = hackney:body(ClientRef),
   {StatusCode, ResponseBody}.
 
