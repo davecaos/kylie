@@ -12,7 +12,13 @@ Kylie is a blond and small Erlang/Elixir client for Cayley graph data base
 ---------
 Example:
 ```erlang
-Eshell V7.0  (abort with ^G)
+>rebar3 shell
+
+===> Verifying dependencies...
+===> Compiling kylie
+Erlang/OTP 19 [erts-8.1] [source-77fb4f8] [64-bit] [smp:4:4] [async-threads:0] [kernel-poll:false]
+
+Eshell V8.1  (abort with ^G)
 1> squad:new("Kylie", "is", "singer").
 #{object => "singer",predicate => "is",subject => "Kylie"}
 
@@ -28,7 +34,7 @@ ok
 You can do a generic query with Subject and Predicate.
 ```erlang
 5> kylie:get_result(<<"Kylie">>, <<"is">>).
-{ok, [<<"model">>,<<"singer">>,<<"songwriter">>]}
+[<<"model">>,<<"singer">>,<<"songwriter">>]
 ```
 
 
@@ -53,16 +59,24 @@ ok
 
 9>PropLispQuery = [{graph_vertex, <<"Kylie">>}, {out, <<"recorded">>}, {out, <<"incluided">>}, all].
 [{graph_vertex,<<"Kylie">>},{out,<<"recorded">>},{out,<<"incluided">>},all]
+
 10>GremblinQuery = kylie:build_gremblin_human_readable(PropLispQuery).
 <<"g.V('Kylie').Out('recorded').Out('incluided').All()">>
+
 11>{ok, Result} = kylie:query(GremblinQuery).
-{ok,[<<"Can't Get You Out of My Head">>,<<"In Your Eyes">>]}
+[<<"Can't Get You Out of My Head">>,<<"In Your Eyes">>]
 ```
 
 ---------
 Elixir Example:
 ```elixir
-Interactive Elixir (1.3.0) - press Ctrl+C to exit (type h() ENTER for help)
+>iex -S mix run -e "Kylie.start"
+Erlang/OTP 19 [erts-8.1] [source-77fb4f8] [64-bit] [smp:4:4] [async-threads:10] [kernel-poll:false]
+
+
+=INFO REPORT==== 14-Dec-2016::11:50:14 ===
+Creating wpool ETS tableInteractive Elixir (1.3.4) - press Ctrl+C to exit (type h() ENTER for help)
+
 iex(1)> Squad.new("Kylie", "is", "singer")
 %{object: "singer", predicate: "is", subject: "Kylie"}
 
@@ -78,7 +92,7 @@ iex(4)> Kylie.add(Squad.new("Kylie", "is", "actress"))
 You can do a generic query with Subject and Predicate.
 ```elixir
 iex(4)> Kylie.get_result("Kylie", "is")
-{ok, ["model","singer","songwriter"]}
+["model","singer","songwriter"]
 ```
 
 
@@ -94,6 +108,7 @@ With this proplisp:
 ```
 
 ```elixir
+
 iex(5)> Kylie.add(Squad.new("Kylie", "recorded", "Fever"))
 :ok
 iex(6)> Kylie.add(Squad.new("Fever", "incluided", "Can't Get You Out of My Head"))
@@ -103,9 +118,11 @@ iex(7)> Kylie.add(Squad.new("Fever", "incluided", "In Your Eyes"))
 
 iex(8)> propLispQuery = [{:graph_vertex, "Kylie"}, {:out, "recorded"}, {:out, "incluided"}, :all]
 [{:graph_vertex, "Kylie"}, {:out, "recorded"}, {:out, "incluided"}, :all]
+
 iex(9)> gremblinQuery = Kylie.build_gremblin_human_readable(propLispQuery)
 "g.V("Kylie").Out("recorded").Out("incluided").All()"
+
 iex(10)> {ok, result} = Kylie.query(gremblinQuery)
-{:ok,["Can't Get You Out of My Head","In Your Eyes"]}
+["Can't Get You Out of My Head","In Your Eyes"]
 
 ```

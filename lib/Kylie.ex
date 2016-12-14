@@ -12,6 +12,9 @@ defmodule Kylie do
   def unquote(:"add")(arg1) do
     :erlang.apply(:"kylie", :"add", [arg1])
   end
+  def unquote(:"query")(arg1) do
+    :erlang.apply(:"kylie", :"query", [arg1])
+  end
   def unquote(:"delete")(arg1) do
     :erlang.apply(:"kylie", :"delete", [arg1])
   end
@@ -23,8 +26,5 @@ defmodule Kylie do
   end
   def unquote(:"build_gremblin")(arg1) do
     :erlang.apply(:"kylie", :"build_gremblin", [arg1])
-  end
-  def unquote(:"query")(arg1) do
-    :erlang.apply(:"kylie", :"query", [arg1])
   end
 end
