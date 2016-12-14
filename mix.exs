@@ -4,7 +4,7 @@ defmodule Kylie.Mixfile do
   def project do
     [
       app: :kylie,
-      version: "0.1.0",
+      version: "1.0.0",
       elixir: "~> 1.2",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -26,7 +26,7 @@ defmodule Kylie.Mixfile do
     [
       {:hackney, "1.6.1"},
       {:jsx, "2.8.1"},
-      {:worker_pool, "2.2}    
+      {:worker_pool, "~> 2.2"}    
     ]
   end
 

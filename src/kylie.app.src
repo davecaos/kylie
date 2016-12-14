@@ -2,7 +2,7 @@
  [
   {description,
    "Kylie is a Erlang application for Cayley graph data base"},
-  {vsn, "0.1.0"},
+  {vsn, "1.0.0"},
   {applications, [kernel, stdlib, hackney, worker_pool]},
   {modules, []},
   {registered, [kylie_app]},
@@ -10,8 +10,6 @@
   {files, [ "src/*"
           , "include/*"
           , "lib/*"
-          , "Makefile"
-          , "erlang.mk"
           , "README.md"
           , "rebar.config"
           , "rebar.lock"
