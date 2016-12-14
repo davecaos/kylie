@@ -15,7 +15,9 @@ defmodule Kylie.Mixfile do
 
   def application do
     [
-       applications: [:hackney],
+       registered: [:kylie_app],
+       mod: {:kylie_app, []},
+       applications: [:hackney, :worker_pool],
        env: []
     ]
   end
@@ -23,20 +25,28 @@ defmodule Kylie.Mixfile do
   defp deps do
     [
       {:hackney, "1.6.1"},
-      {:jsx, "2.8.0"}    
+      {:jsx, "2.8.1"},
+      {:worker_pool, "2.2}    
     ]
   end
 
   defp aliases do
-    [compile: [&pre_compile_hooks/1, "compile", &post_compile_hooks/1]]
+    [compile: &compile_with_hooks/1]
   end
 
-  defp pre_compile_hooks(_) do
+  defp compile_with_hooks(args) do
+    pre_compile_hooks()
+    result = Mix.Task.run("compile", args)
+    post_compile_hooks()
+    result
+  end
+
+  defp pre_compile_hooks() do
     run_hook_cmd [
     ]
   end
 
-  defp post_compile_hooks(_) do
+  defp post_compile_hooks() do
     run_hook_cmd [
     ]
   end

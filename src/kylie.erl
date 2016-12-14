@@ -1,12 +1,12 @@
-  -module(kylie).
+-module(kylie).
 
 -author("David Cesar Hernan Cao <david.c.h.cao@gmail.com>").
 -github("https://github.com/davecaos").
 -license("MIT").
 
--export([ add/1
-        , start/0
+-export([ start/0
         , stop/0
+        , add/1
         , delete/1
         , query/1
         , get_result/2
@@ -14,47 +14,39 @@
         , build_gremblin_human_readable/1
         ]).
 
--define(WRITE_URI,          "/api/v1/write").
--define(WRITE_NQUAD_URI,    "/api/v1/write/file/nquad").
--define(DELETE_URI,         "/api/v1/delete").
--define(QUERY_GREMBLIN_URI, "/api/v1/query/gremlin").
-
 -type error() :: {integer(), binary()}.
+-type json()  :: binary().
 
--spec start() -> ok.
-start() -> ok.
 
+%% application
+%% @doc Starts the application
+-spec start() -> ok | {error, {already_started, ?MODULE}}.
+start() ->
+  {ok, _Started} = application:ensure_all_started(kylie).
+
+%% @doc Stops the application
 -spec stop() -> ok.
-stop() ->  ok.
+stop() ->
+  application:stop(kylie).
+
 
 -spec add(squad:squad4()) -> ok | error().
 add(Squad) ->
-  JsonBody = jsx:encode([Squad]),
-  case cayley_http_call(?WRITE_URI, JsonBody) of
-    {200, _Response} -> ok;
-    {StatusErrorCode, Response} -> {StatusErrorCode, Response}
-  end.
+  kylie_worker:add(Squad).
+
+-spec query(iodata()) -> json().
+query(Query) ->
+  kylie_worker:query(Query).
 
 -spec delete(squad:squad4()) -> ok | error().
 delete(Squad) ->
-  JsonBody = jsx:encode([Squad]),
-  case cayley_http_call(?DELETE_URI, JsonBody) of
-    {200, _Response} -> ok;
-    {StatusErrorCode, Response} -> {StatusErrorCode, Response}
-  end.
+  kylie_worker:delete(Squad).
 
 -spec get_result(binary(), binary()) -> {ok | error, list()}.
 get_result(Subject, Predicate) ->
-  Query = io_lib:format(<<"g.V('~s').Out('~s').All()">>, [Subject, Predicate]),
-  query(Query).
-
-filter_query_result(#{<<"result">> := null})    -> [];
-filter_query_result(#{<<"result">> := Results}) ->
-  Fun = 
-    fun(#{<<"id">> := Contact}) -> 
-      Contact 
-    end,
-  lists:map(Fun, Results).
+  PropLispQuery = [{graph_vertex, Subject}, {out, Predicate}, all],
+  GremblinQuery = build_gremblin_human_readable(PropLispQuery),
+  query(GremblinQuery).
 
 -spec build_gremblin_human_readable(list()) -> binary().
 build_gremblin_human_readable(PropLisps) ->
@@ -74,7 +66,6 @@ build_query({graph_morphism, GraphMorphism}) ->
   io_lib:format(<<"g.M('~s').">>, [build_query(GraphMorphism)]);
 build_query({graph_emit, Data}) ->
   io_lib:format(<<"g.Emit('~s').">>, [build_query(Data)]);
-
 build_query({has, [Predicate, Object]}) ->
   io_lib:format(<<"Has('~s','~s' ).">>, [build_query(Predicate), build_query(Object)]);
 build_query({get_limit, Limit}) ->
@@ -97,30 +88,3 @@ build_query(all) ->
   <<"All()">>;
 build_query(Node) ->
   Node.
-
--spec query(binary()) -> {ok | error, list()}.
-query(Query) ->
-  get_cayley_error(cayley_http_call(?QUERY_GREMBLIN_URI, Query)).
-
--spec cayley_http_call(string(), iodata()) -> map().
-cayley_http_call(Uri, Body) ->
-  DefaultPort = {ok, "64210"},
-  DefaultHost = {ok, "127.0.0.1"},
-  DefaultTimeOut = {ok, 3000},
-  {ok, Port} = application:get_env(kylie, port, DefaultPort),
-  {ok, Host}  = application:get_env(kylie, host, DefaultHost),
-  {ok, Timeout} = application:get_env(kylie, timeout, DefaultTimeOut),
-  Headers = [{<<"Content-Type">>, <<"application/json">>}],
-  List    = [Host, <<":">>, Port, Uri],
-  URL     = iolist_to_binary(List),
-  Opts = [{timeout, Timeout}],
-  {ok, StatusCode, _, ClientRef} = hackney:request(post, URL, Headers, Body, Opts),
-  {ok, ResponseBody} = hackney:body(ClientRef),
-  {StatusCode, ResponseBody}.
-
-get_cayley_error({_StatusCode = 200, JsonResponse}) ->
-  MapResponse = jsx:decode(JsonResponse, [return_maps]),
-  {ok, filter_query_result(MapResponse)};
-get_cayley_error({StatusErrorCode, ErrorDescription}) ->
-  {error, {StatusErrorCode, ErrorDescription}}.
-

@@ -3,9 +3,10 @@
   {description,
    "Kylie is a Erlang application for Cayley graph data base"},
   {vsn, "0.1.0"},
-  {applications, [kernel, stdlib, hackney]},
+  {applications, [kernel, stdlib, hackney, worker_pool]},
   {modules, []},
-  {registered, []},
+  {registered, [kylie_app]},
+  {mod, {kylie_app, []}},
   {files, [ "src/*"
           , "include/*"
           , "lib/*"
@@ -20,6 +21,6 @@
   {maintainers, ["David Cesar Hernan Cao"]},
   {licenses, ["MIT"]},
   {links, [{"Github", "https://github.com/davecaos/kylie"}]},
-  {build_tools, ["make", "rebar3", "mix"]}
+  {build_tools, ["rebar3", "mix"]}
  ]
 }.
