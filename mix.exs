@@ -24,9 +24,9 @@ defmodule Kylie.Mixfile do
 
   defp deps do
     [
-      {:hackney, "1.6.1"},
-      {:jsx, "2.8.1"},
-      {:worker_pool, "~> 2.2"}    
+      {:hackney, "~> 1.10"},
+      {:jsx, "~> 2.8"},
+      {:worker_pool, "~> 3.1"}
     ]
   end
 
@@ -61,5 +61,5 @@ defmodule Kylie.Mixfile do
       (cmd) ->
         Mix.Shell.cmd cmd, [], fn(x) -> Mix.Shell.IO.info(String.strip(x)) end
       end).(command)
-  end    
+  end
 end
