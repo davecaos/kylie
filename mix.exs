@@ -17,7 +17,7 @@ defmodule Kylie.Mixfile do
     [
        registered: [:kylie_app],
        mod: {:kylie_app, []},
-       applications: [:hackney, :worker_pool],
+       applications: [:hackney, :jsx, :worker_pool],
        env: []
     ]
   end
