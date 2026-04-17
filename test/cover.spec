@@ -2,7 +2,9 @@
 {
  incl_mods,
  [ kylie
- , Kylie_worker
+ , kylie_worker
+ , kylie_worker_sup
+ , kylie_app
  , squad
   ]
 }.

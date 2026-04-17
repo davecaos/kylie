@@ -126,3 +126,65 @@ ok
 11>{ok, Result} = kylie:query(GremblinQuery).
 [<<"Can't Get You Out of My Head">>,<<"In Your Eyes">>]
 ```
+
+---------
+
+## Testing
+
+The suite is split in two so the pure logic can be exercised without
+network, and the real HTTP path can be verified end-to-end against a
+real Cayley server.
+
+### Unit tests (no Cayley required)
+
+Pure, in-process tests for `squad`, the Gizmo/Gremlin query builder
+and the injection-escape helper. Run them on every push — they are fast
+and have zero external dependencies:
+
+```
+rebar3 unit
+```
+
+### Integration tests (Docker-backed Cayley)
+
+Exercises the full HTTP round-trip (`add`, `delete`, `get_result`,
+error path on an unreachable server). They expect a Cayley instance
+listening on `127.0.0.1:64210`. If Cayley is not reachable the suite
+is skipped, not failed.
+
+Start Cayley once:
+
+```
+docker run -d --name kylie-cayley \
+  -p 64210:64210 \
+  cayleygraph/cayley:latest \
+  http --init --host=0.0.0.0:64210
+```
+
+Then run:
+
+```
+rebar3 integration
+```
+
+To tear Cayley down afterwards:
+
+```
+docker rm -f kylie-cayley
+```
+
+### Both at once
+
+```
+rebar3 test
+```
+
+### Configuring the query endpoint
+
+Cayley renamed `/api/v1/query/gremlin` to `/api/v1/query/gizmo`.
+Kylie defaults to `gizmo` (current Cayley). For older servers, override
+in `config/sys.config`:
+
+```erlang
+[{kylie, [ {query_path, <<"/api/v1/query/gremlin">>} ]}].
+```

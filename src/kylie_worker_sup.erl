@@ -17,10 +17,12 @@ stop() ->
 
 %% supervisor.
 
+-spec init([]) ->
+  {ok, {supervisor:sup_flags(), [supervisor:child_spec()]}}.
 init([]) ->
   KylieWorker =
     {kylie_worker, {kylie_worker, start_link, []},
-     permanent, infinity, worker, [kylie_worker]
+     permanent, infinity, supervisor, [kylie_worker]
     },
   Children = [KylieWorker],
   {ok, {{one_for_one, 10, 10}, Children}}.
